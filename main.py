@@ -4,14 +4,14 @@ import datetime as dt
 import string
 
 
-def groner_repr(val: int, base: int = 10, formatted_printout: bool = True) -> str:
+def groner_repr(val: int, base: int = 10, use_standard_format: bool = True) -> str:
     """ Return string nuber representation with base from 2 to 36 
-    with or without base prefix
+    using standard base prefix for binary, oct, decimal or hex or custom base prefix [base value]
     
     Keyword arguments: 
-    val                -- int, to be converted 
-    base               -- int, conversion base 
-    formatted_printout -- bool, include or not conversion base prefix 
+    val                 -- int, to be converted 
+    base                -- int, conversion base 
+    use_standard_format -- bool, include or not conversion base prefix 
     """
     
     rng = string.digits[::] + string.ascii_uppercase[::]
@@ -19,15 +19,25 @@ def groner_repr(val: int, base: int = 10, formatted_printout: bool = True) -> st
     res = ''
     is_negative = False
     
-    if type(val) != int or type(base) != int or type(formatted_printout) != bool:
+    if type(val) != int or type(base) != int or type(use_standard_format) != bool:
         raise TypeError("Argument type error")
+    
+    if base < 2 or base > 36:
+        raise ValueError("Base should be in range from 2 to 36")
+    
+    if use_standard_format:
+        if base == 2:
+            return bin(val)
+        elif base == 8:
+            return oct(val)
+        elif base == 10:
+            return str(val)
+        elif base == 16:
+            return hex(val)
     
     if val < 0:
         val = -val
         is_negative = True
-
-    if base < 2 or base > 36:
-        raise ValueError("Base should be in range from 2 to 36")
     
     while val > base:
         res += str(rng[val % base])
@@ -35,10 +45,7 @@ def groner_repr(val: int, base: int = 10, formatted_printout: bool = True) -> st
     else:
         res += str(rng[val%base])
     
-    res = res[::-1]
-    
-    if formatted_printout:
-        res = f'0[{str(base)}]' + res
+    res = f'0[{str(base)}]' + res[::-1]
     
     if is_negative:
         res = '-' + res
