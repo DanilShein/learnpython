@@ -19,7 +19,7 @@ def groner_repr(val: int, base: int = 10, formatted_printout: bool = True) -> st
     res = ''
     is_negative = False
     
-    if type(val) != int or type(base) != int or type(formatted_print) != bool:
+    if type(val) != int or type(base) != int or type(formatted_printout) != bool:
         raise TypeError("Argument type error")
     
     if val < 0:
